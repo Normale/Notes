@@ -32,7 +32,6 @@ async def get(world: str, page: int) -> str:
                 return await response.text("utf-8")
             break
         except aiohttp.client_exceptions.ClientConnectorError:
-            asyncio.sleep(0.1)
             continue
 
 
