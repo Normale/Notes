@@ -29,36 +29,26 @@ class Graph:
         count_1 = sum(len(sublst)==1 for sublst in self.relations_list) 
         if count_1 > 2: return True
 
+    def bf_add(self, v, path):
+        if len(path) == self.num - 1: return path
+        if v in path: return False
+        
+        path = path + [v]
+        for vertice in self.relations_list[v - 1]:
+            done = self.bf_add(vertice, path)
+            if done: return done
 
-    def check_vertice(self, path, v, push=False):
-        if len(path) == self.num - 1:
-            return path
-        if v in path:
-            return False
-        if (push == False):
-            path.append(v)
-        else:
-            path = [v] + path
-
-        for vertice in self.relations_list[path[-1] - 1]:
-            done = self.check_vertice(path, vertice)
-            if done:
-                return done
-
-        for vertice in self.relations_list[path[0] - 1]:
-            done = self.check_vertice(path, vertice, push=True)
-            if done:
-                return done
-
+        
+    def brute_force(self):
+        path = []
+        for v in self.vertices:
+            x = self.bf_add(v, path)
+            if x:
+                return x
         return False
 
-    def find_path(self):
-        if self.not_hamiltonian_quickcheck() == True: return False
-        path = self.check_vertice([], 1)
-        return path
 
-
-def square_sums_row(num):
+def square_sums(num):
     graph = Graph(num)
     graph.create_relations()
     path = graph.find_path()
@@ -66,6 +56,7 @@ def square_sums_row(num):
 
 
 if __name__ == "__main__":
-    graph = Graph(23)
+    graph = Graph(5)
     graph.create_relations()
-    path = graph.find_path()
+    path = graph.brute_force()
+    print(path)
