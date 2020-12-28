@@ -1,3 +1,15 @@
+'''
+Task:
+Pick some integer N. Given all of the integers from 1 to N, 
+can you arrange all elements such that each adjacent pair sums to a square number?
+
+Detailed explanation:
+https://www.codewars.com/kata/5a667236145c462103000091
+
+More optimized solution: https://github.com/charlieturner/square-sum-sequences
+'''
+
+from time import time
 def tst(n):
     lista = []
     for i in range(1, n):
@@ -12,7 +24,7 @@ class Graph:
         self.num = n + 1
         self.possible_sums = tst(self.num)
         self.relations_list = []
-        self.vertices = [n for n in range(1,self.num)]
+        self.vertices = list(range(1,self.num))
     def create_relations(self):
         for v in self.vertices:
             relation = []
@@ -46,17 +58,45 @@ class Graph:
             if x:
                 return x
         return False
+    
+    def delete(self, vertex, relations, vertices_o):
+        vertices = vertices_o.copy()
+        try:
+            vertices.remove(vertex)
+        except:
+            return False
+        if not vertices: return [vertex]
+        for v in relations[vertex - 1]:
+            res = self.delete(v, relations, vertices)
+            if res != False:
+                res.append(vertex)
+                return res
+        return False
 
+    def deleting_approach(self):
+        if self.not_hamiltonian_quickcheck(): return False
+        for v in self.vertices:
+            result = self.delete(v, self.relations_list, self.vertices)
+            if result != False:
+                return result
+        return False
+        
 
 def square_sums(num):
     graph = Graph(num)
     graph.create_relations()
-    path = graph.find_path()
+    path = graph.brute_force()
     return path
 
 
 if __name__ == "__main__":
-    graph = Graph(5)
-    graph.create_relations()
-    path = graph.brute_force()
-    print(path)
+    time1 = time()
+    for i in range(289, 290):
+        # graph = Graph(i)
+        # graph.create_relations()
+        # path = graph.deleting_approach()
+        # print(f"{i}: {path}")
+        print(f"{i} => {square_sums(i)}")
+
+    time2 = time()
+    print(time2-time1)

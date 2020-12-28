@@ -3,6 +3,14 @@
 #IDEAS:
 #1. dijkstra algorithm
 #2. do it linearly without creating classes
+'''
+Task:
+Given a file with tree (look Files/easy.txt, medium.txt, very_easy.txt)
+find a shortest path from the top of the tree to the bottom.
+Shortest path = path, where sum of numbers is the smallest.
+You can move only left or right from the given node. 
+'''
+
 class Node:
     def __init__(self, number, left=0, right=0):
         self.number = number
